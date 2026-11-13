@@ -429,9 +429,201 @@ document.addEventListener("DOMContentLoaded", () => {
       closeSidebar();
     }
   });
+   // ========================================
+  // 8. CODE EDITOR + LIVE PREVIEW
+  // ========================================
+
+  const htmlCode = $("#htmlCode");
+  const cssCode = $("#cssCode");
+  const jsCode = $("#jsCode");
+  const previewFrame = $("#livePreview");
+  const previewButton = $("#previewButton");
+  const resetCodeButton = $("#resetCodeButton");
+  const clearCodeButton = $("#clearCodeButton");
+  const editorStatus = $("#editorStatus");
+
+  const editorTabs = $$("[data-code-tab]");
+  const deviceButtons = $$("[data-preview-size]");
+
+  const defaultHTML = `<!DOCTYPE html>
+<html>
+<head>
+  <title>My Website</title>
+</head>
+<body>
+  <h1>Welcome to My Website!</h1>
+  <p>Created with CRAFTLY.</p>
+  <button>Get Started</button>
+</body>
+</html>`;
+
+  const defaultCSS = `body {
+  font-family: Arial, sans-serif;
+  padding: 30px;
+  background: #f4f6f5;
+  color: #202b2b;
+}
+
+h1 {
+  color: #2c8c83;
+}
+
+button {
+  padding: 12px 20px;
+  background: #2c8c83;
+  color: white;
+  border: none;
+  border-radius: 8px;
+}`;
+
+  const defaultJS = `console.log("CRAFTLY Preview Ready");`;
+
+  let activeCodeTab = "html";
+
+  function setEditorStatus(message) {
+    if (editorStatus) {
+      editorStatus.textContent = message;
+    }
+  }
+
+  function switchCodeTab(tabName) {
+    const editors = {
+      html: htmlCode,
+      css: cssCode,
+      js: jsCode
+    };
+
+    if (!editors[tabName]) return;
+
+    activeCodeTab = tabName;
+
+    Object.entries(editors).forEach(([name, editor]) => {
+      if (editor) {
+        editor.hidden = name !== tabName;
+      }
+    });
+
+    editorTabs.forEach(button => {
+      const active = button.dataset.codeTab === tabName;
+
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+
+    setEditorStatus(`${tabName.toUpperCase()} editor selected.`);
+  }
+
+  editorTabs.forEach(button => {
+    button.addEventListener("click", () => {
+      switchCodeTab(button.dataset.codeTab);
+    });
+  });
+
+  function runCodePreview() {
+    if (!htmlCode || !cssCode || !jsCode || !previewFrame) {
+      setEditorStatus("Editor elements could not be found.");
+      return;
+    }
+
+    let page = htmlCode.value.trim();
+
+    if (!page) {
+      page = "<!DOCTYPE html><html><head></head><body></body></html>";
+    }
+
+    const styleTag = `<style>
+${cssCode.value}
+</style>`;
+
+    if (/<\/head>/i.test(page)) {
+      page = page.replace(/<\/head>/i, `${styleTag}</head>`);
+    } else {
+      page = `${styleTag}${page}`;
+    }
+
+    // Prevent user JavaScript from closing the injected script tag.
+    const safeJavaScript = jsCode.value.replace(
+      /<\/script/gi,
+      "<\\/script"
+    );
+
+    const scriptTag = `<script>
+${safeJavaScript}
+<\/script>`;
+
+    if (/<\/body>/i.test(page)) {
+      page = page.replace(/<\/body>/i, `${scriptTag}</body>`);
+    } else {
+      page += scriptTag;
+    }
+
+    previewFrame.srcdoc = page;
+    setEditorStatus("Preview updated successfully.");
+  }
+
+  previewButton?.addEventListener("click", runCodePreview);
+
+  resetCodeButton?.addEventListener("click", () => {
+    if (!htmlCode || !cssCode || !jsCode) return;
+
+    htmlCode.value = defaultHTML;
+    cssCode.value = defaultCSS;
+    jsCode.value = defaultJS;
+
+    switchCodeTab("html");
+    runCodePreview();
+
+    setEditorStatus("Editor restored to default code.");
+  });
+
+  clearCodeButton?.addEventListener("click", () => {
+    const editors = {
+      html: htmlCode,
+      css: cssCode,
+      js: jsCode
+    };
+
+    const activeEditor = editors[activeCodeTab];
+
+    if (!activeEditor) return;
+
+    activeEditor.value = "";
+
+    setEditorStatus(
+      `${activeCodeTab.toUpperCase()} code cleared.`
+    );
+  });
+
+  deviceButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      if (!previewFrame) return;
+
+      const isMobile =
+        button.dataset.previewSize === "mobile";
+
+      previewFrame.classList.toggle("is-mobile", isMobile);
+
+      deviceButtons.forEach(item => {
+        const active = item === button;
+
+        item.classList.toggle("active", active);
+        item.setAttribute("aria-pressed", String(active));
+      });
+
+      setEditorStatus(
+        isMobile ? "Mobile preview selected." : "Desktop preview selected."
+      );
+    });
+  });
+
+  // Initial editor state
+  if (htmlCode && cssCode && jsCode) {
+    switchCodeTab("html");
+    runCodePreview();
+  }
 
   // ========================================
-  // 8. INITIALIZATION
+  // 9. INITIALIZATION
   // ========================================
 
   console.info("CRAFTLY initialized successfully.");
