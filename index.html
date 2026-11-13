@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#202033">
+  <meta name="description" content="CRAFTLY — Create, Design and Build. Your AI-powered website studio.">
+  <title>CRAFTLY — Modern Website Studio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app" id="app">
+
+    <!-- Mobile Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <a href="#dashboard" class="brand" aria-label="CRAFTLY Home">
+        <span class="brand-icon">C</span>
+        <span class="brand-name">CRAFTLY</span>
+      </a>
+
+      <div class="nav-label">WORKSPACE</div>
+
+      <nav class="navigation" aria-label="Main navigation">
+        <a href="#dashboard" class="nav-link active" data-section="dashboard">
+          <span class="nav-icon">⌂</span>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="#builder" class="nav-link" data-section="builder">
+          <span class="nav-icon">✦</span>
+          <span>AI Builder</span>
+        </a>
+
+        <a href="#templates" class="nav-link" data-section="templates">
+          <span class="nav-icon">▦</span>
+          <span>Templates</span>
+        </a>
+
+        <a href="#editor" class="nav-link" data-section="editor">
+          <span class="nav-icon">⌘</span>
+          <span>Code Editor</span>
+        </a>
+
+        <a href="#projects" class="nav-link" data-section="projects">
+          <span class="nav-icon">▣</span>
+          <span>My Projects</span>
+        </a>
+      </nav>
+
+      <div class="nav-label">PREFERENCES</div>
+
+      <nav class="navigation" aria-label="Preferences">
+        <a href="#settings" class="nav-link" data-section="settings">
+          <span class="nav-icon">⚙</span>
+          <span>Settings</span>
+        </a>
+
+        <a href="#api" class="nav-link" data-section="api">
+          <span class="nav-icon">⌘</span>
+          <span>API Manager</span>
+        </a>
+
+        <a href="#about" class="nav-link" data-section="about">
+          <span class="nav-icon">ⓘ</span>
+          <span>About</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="developer-mark">NCX</div>
+        <div class="developer-info">
+          <strong>Powered by NCX</strong>
+          <small>Build by Nayon Ahamed</small>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <button
+          class="menu-button"
+          id="menuButton"
+          type="button"
+          aria-label="Open navigation"
+          aria-expanded="false">
+          ☰
+        </button>
+
+        <div class="breadcrumb">
+          <span>Workspace</span>
+          <span class="breadcrumb-divider">/</span>
+          <strong id="breadcrumbTitle">Dashboard</strong>
+        </div>
+
+        <div class="top-actions">
+          <button
+            class="icon-button"
+            id="themeButton"
+            type="button"
+            aria-label="Toggle light and dark theme">
+            ◐
+          </button>
+
+          <button
+            class="profile-button"
+            id="loginButton"
+            type="button">
+            Sign In
+          </button>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="page-content">
+
+        <!-- Dashboard -->
+        <section class="page-section" id="dashboard">
+
+          <div class="welcome-section">
+            <div class="welcome-content">
+              <span class="eyebrow">YOUR CREATIVE WORKSPACE</span>
+              <h1>Create without limits.</h1>
+              <p>
+                Turn your ideas into beautiful websites with CRAFTLY.
+              </p>
+            </div>
+
+            <div class="welcome-badge">
+              <span>✦</span> AI STUDIO
+            </div>
+          </div>
+
+          <!-- AI Builder -->
+          <section class="builder-card" id="builder">
+
+            <div class="section-heading">
+              <div>
+                <span class="eyebrow">AI WEBSITE GENERATOR</span>
+                <h2>What do you want to build?</h2>
+              </div>
+
+              <div class="ai-symbol">✦</div>
+            </div>
+
+            <textarea
+              id="websitePrompt"
+              rows="4"
+              maxlength="5000"
+              placeholder="Describe your website idea... Example: Create a modern business website with Home, Services and Contact pages."
+              aria-label="Describe your website idea">
+            </textarea>
+
+            <div class="builder-footer">
+              <span class="helper-text">
+                Describe your idea in simple language.
+              </span>
+
+              <button
+                class="primary-button"
+                id="generateButton"
+                type="button">
+                <span>✦</span>
+                Generate Website
+              </button>
+            </div>
+
+            <p
+              class="status-message"
+              id="builderStatus"
+              role="status"
+              aria-live="polite">
+            </p>
+          </section>
+
+          <!-- Quick Actions -->
+          <section class="section-block" id="quickActions">
+
+            <div class="section-heading">
+              <div>
+                <span class="eyebrow">GET STARTED</span>
+                <h2>Start creating</h2>
+              </div>
+
+              <a href="#templates" class="text-link">View all →</a>
+            </div>
+
+            <div class="action-grid">
+
+              <a href="#builder" class="action-card">
+                <span class="action-icon">✦</span>
+                <strong>AI Builder</strong>
+                <small>Generate with AI</small>
+              </a>
+
+              <a href="#templates" class="action-card">
+                <span class="action-icon">▦</span>
+                <strong>Templates</strong>
+                <small>Explore designs</small>
+              </a>
+
+              <a href="#editor" class="action-card">
+                <span class="action-icon">⌘</span>
+                <strong>Code Editor</strong>
+                <small>Edit your code</small>
+              </a>
+
+              <a href="#projects" class="action-card">
+                <span class="action-icon">▣</span>
+                <strong>My Projects</strong>
+                <small>Manage your work</small>
+              </a>
+
+            </div>
+          </section>
+
+          <!-- Recent Projects -->
+          <section class="section-block" id="projects">
+
+            <div class="section-heading">
+              <div>
+                <span class="eyebrow">YOUR WORK</span>
+                <h2>Recent Projects</h2>
+              </div>
+
+              <span class="project-count" id="projectCount">
+                0 Projects
+              </span>
+            </div>
+
+            <div class="empty-state" id="emptyProjects">
+              <div class="empty-icon">▧</div>
+              <h3>No projects yet</h3>
+              <p>Your created websites will appear here.</p>
+
+              <a href="#builder" class="secondary-button">
+                Create your first website
+              </a>
+            </div>
+
+            <div class="project-list" id="projectList"></div>
+
+          </section>
+
+        </section>
+
+        <!-- Templates -->
+        <section class="page-section" id="templates">
+
+          <div class="page-title">
+            <span class="eyebrow">DESIGN COLLECTION</span>
+            <h1>Website Templates</h1>
+            <p>Choose a starting point for your next project.</p>
+          </div>
+
+          <div class="template-grid">
+
+            <article class="template-card">
+              <div class="template-preview business-preview">
+                <span>BUSINESS</span>
+                <strong>Grow your business.</strong>
+                <small>Professional website</small>
+              </div>
+              <div class="template-info">
+                <strong>Business Website</strong>
+                <small>Company and service websites</small>
+              </div>
+              <button class="secondary-button template-button"
+                type="button" data-template="Business">
+                Use Template
+              </button>
+            </article>
+
+            <article class="template-card">
+              <div class="template-preview portfolio-preview">
+                <span>PORTFOLIO</span>
+                <strong>Show your work.</strong>
+                <small>Personal portfolio</small>
+              </div>
+              <div class="template-info">
+                <strong>Portfolio Website</strong>
+                <small>Personal and professional profiles</small>
+              </div>
+              <button class="secondary-button template-button"
+                type="button" data-template="Portfolio">
+                Use Template
+              </button>
+            </article>
+
+            <article class="template-card">
+              <div class="template-preview shop-preview">
+                <span>ONLINE STORE</span>
+                <strong>Discover more.</strong>
+                <small>Shopping website</small>
+              </div>
+              <div class="template-info">
+                <strong>Online Store</strong>
+                <small>Product and shopping websites</small>
+              </div>
+              <button class="secondary-button template-button"
+                type="button" data-template="Online Store">
+                Use Template
+              </button>
+            </article>
+
+            <article class="template-card">
+              <div class="template-preview blog-preview">
+                <span>BLOG</span>
+                <strong>Stories matter.</strong>
+                <small>Articles and news</small>
+              </div>
+              <div class="template-info">
+                <strong>Blog Website</strong>
+                <small>Content and publishing websites</small>
+              </div>
+              <button class="secondary-button template-button"
+                type="button" data-template="Blog">
+                Use Template
+              </button>
+            </article>
+
+          </div>
+        </section>
+
+        <!-- Code Editor -->
+        <section class="page-section" id="editor">
+
+          <div class="page-title">
+            <span class="eyebrow">DEVELOPMENT WORKSPACE</span>
+            <h1>Code Editor</h1>
+            <p>Edit and preview your website code.</p>
+          </div>
+
+          <div class="editor-placeholder">
+            <div class="editor-placeholder-icon">⌘</div>
+            <h3>Your coding workspace</h3>
+            <p>
+              HTML, CSS and JavaScript editing will be available
+              in the editor module.
+            </p>
+            <span class="status-tag">Editor module pending</span>
+          </div>
+
+        </section>
+
+        <!-- API Manager -->
+        <section class="page-section" id="api">
+
+          <div class="page-title">
+            <span class="eyebrow">INTEGRATIONS</span>
+            <h1>API Manager</h1>
+            <p>Configure your AI service connections.</p>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-icon">⌘</div>
+            <h3>Connect your AI provider</h3>
+            <p>
+              OpenRouter and other supported AI providers
+              will be configured through a secure backend.
+            </p>
+            <span class="status-tag">Backend setup required</span>
+          </div>
+
+        </section>
+
+        <!-- Settings -->
+        <section class="page-section" id="settings">
+
+          <div class="page-title">
+            <span class="eyebrow">PERSONALIZATION</span>
+            <h1>Settings</h1>
+            <p>Customize your CRAFTLY workspace.</p>
+          </div>
+
+          <div class="settings-card">
+            <h3>Appearance</h3>
+            <p>Choose your preferred interface theme.</p>
+
+            <div class="theme-options">
+              <button class="theme-option" type="button"
+                data-theme="dark">Dark Mode</button>
+              <button class="theme-option" type="button"
+                data-theme="light">Light Mode</button>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3>Accent Color</h3>
+            <p>Personalize your workspace color.</p>
+
+            <div class="color-options" id="colorOptions">
+
+              <button class="color-dot selected"
+                type="button"
+                data-color="#2C8C83"
+                style="--swatch:#2C8C83"
+                aria-label="Teal"
+                aria-pressed="true"></button>
+
+              <button class="color-dot"
+                type="button"
+                data-color="#7956D8"
+                style="--swatch:#7956D8"
+                aria-label="Purple"
+                aria-pressed="false"></button>
+
+              <button class="color-dot"
+                type="button"
+                data-color="#3478E5"
+                style="--swatch:#3478E5"
+                aria-label="Blue"
+                aria-pressed="false"></button>
+
+              <button class="color-dot"
+                type="button"
+                data-color="#19966B"
+                style="--swatch:#19966B"
+                aria-label="Green"
+                aria-pressed="false"></button>
+
+              <button class="color-dot"
+                type="button"
+                data-color="#E88742"
+                style="--swatch:#E88742"
+                aria-label="Orange"
+                aria-pressed="false"></button>
+
+              <button class="color-dot"
+                type="button"
+                data-color="#D65B91"
+                style="--swatch:#D65B91"
+                aria-label="Pink"
+                aria-pressed="false"></button>
+
+              <input
+                type="color"
+                id="customColor"
+                value="#2C8C83"
+                aria-label="Choose custom accent color">
+            </div>
+
+            <button class="text-link reset-button"
+              id="resetColorButton" type="button">
+              Reset default color
+            </button>
+          </div>
+
+        </section>
+
+        <!-- About -->
+        <section class="page-section" id="about">
+
+          <div class="page-title">
+            <span class="eyebrow">OUR IDENTITY</span>
+            <h1>About CRAFTLY</h1>
+            <p>Create. Design. Build.</p>
+          </div>
+
+          <div class="about-card">
+            <div class="about-logo">C</div>
+            <h2>CRAFTLY</h2>
+            <p class="about-tagline">Create. Design. Build.</p>
+
+            <div class="about-divider"></div>
+
+            <p>Owned & Built by</p>
+            <h3>Nayon Ahamed</h3>
+
+            <p class="about-credit">
+              A product of NCX (NayonCodeX).
+            </p>
+
+            <span class="version-label">Version 1.0.0 · Under Development</span>
+          </div>
+
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+          <strong>CRAFTLY</strong>
+          <span>Create. Design. Build.</span>
+          <span>Powered by NCX · Build by Nayon Ahamed</span>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Login Dialog -->
+  <dialog id="loginDialog" class="login-dialog">
+
+    <div class="dialog-content">
+
+      <button
+        class="close-button"
+        id="closeDialog"
+        type="button"
+        aria-label="Close dialog">×</button>
+
+      <div class="brand-icon dialog-logo">C</div>
+
+      <h2>Welcome to CRAFTLY</h2>
+      <p>Your creative workspace starts here.</p>
+
+      <button class="secondary-button full-button"
+        id="googleLogin" type="button">
+        Continue with Google
+      </button>
+
+      <button class="secondary-button full-button"
+        id="emailLogin" type="button">
+        Continue with Email
+      </button>
+
+      <button class="primary-button full-button"
+        id="guestLogin" type="button">
+        Continue as Guest
+      </button>
+
+      <small>
+        Secure account features will be enabled
+        after authentication backend setup.
+      </small>
+
+    </div>
+  </dialog>
+
+  <!-- JavaScript -->
+  <script src="script.js" defer></script>
+
+</body>
+      </html>
