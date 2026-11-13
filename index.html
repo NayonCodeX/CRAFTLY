@@ -327,28 +327,172 @@
 
           </div>
         </section>
+<!-- Code Editor -->
+<section class="page-section" id="editor">
 
-        <!-- Code Editor -->
-        <section class="page-section" id="editor">
+  <div class="page-title">
+    <span class="eyebrow">DEVELOPMENT WORKSPACE</span>
+    <h1>Code Editor</h1>
+    <p>Write, edit and preview your website.</p>
+  </div>
 
-          <div class="page-title">
-            <span class="eyebrow">DEVELOPMENT WORKSPACE</span>
-            <h1>Code Editor</h1>
-            <p>Edit and preview your website code.</p>
-          </div>
+  <div class="code-editor-card">
 
-          <div class="editor-placeholder">
-            <div class="editor-placeholder-icon">⌘</div>
-            <h3>Your coding workspace</h3>
-            <p>
-              HTML, CSS and JavaScript editing will be available
-              in the editor module.
-            </p>
-            <span class="status-tag">Editor module pending</span>
-          </div>
+    <!-- Editor Toolbar -->
+    <div class="editor-toolbar">
 
-        </section>
+      <div class="editor-tabs">
+        <button
+          class="editor-tab active"
+          data-code-tab="html"
+          type="button">
+          HTML
+        </button>
 
+        <button
+          class="editor-tab"
+          data-code-tab="css"
+          type="button">
+          CSS
+        </button>
+
+        <button
+          class="editor-tab"
+          data-code-tab="js"
+          type="button">
+          JavaScript
+        </button>
+      </div>
+
+      <button
+        id="previewButton"
+        class="primary-button"
+        type="button">
+        Run Preview
+      </button>
+
+    </div>
+
+    <!-- Code Input -->
+    <div class="editor-workspace">
+
+      <textarea
+        id="htmlCode"
+        class="code-input"
+        spellcheck="false"
+        aria-label="HTML code"
+        placeholder="Write your HTML code here..."><!DOCTYPE html>
+<html>
+<head>
+  <title>My Website</title>
+</head>
+<body>
+  <h1>Welcome to My Website!</h1>
+  <p>Created with CRAFTLY.</p>
+  <button>Get Started</button>
+</body>
+</html></textarea>
+
+      <textarea
+        id="cssCode"
+        class="code-input"
+        spellcheck="false"
+        aria-label="CSS code"
+        placeholder="Write your CSS code here..."
+        hidden>body {
+  font-family: Arial, sans-serif;
+  padding: 30px;
+  background: #f4f6f5;
+  color: #202b2b;
+}
+
+h1 {
+  color: #2c8c83;
+}
+
+button {
+  padding: 12px 20px;
+  background: #2c8c83;
+  color: white;
+  border: none;
+  border-radius: 8px;
+}</textarea>
+
+      <textarea
+        id="jsCode"
+        class="code-input"
+        spellcheck="false"
+        aria-label="JavaScript code"
+        placeholder="Write your JavaScript code here..."
+        hidden>console.log("CRAFTLY Preview Ready");</textarea>
+
+    </div>
+
+    <!-- Editor Actions -->
+    <div class="editor-actions">
+
+      <button
+        id="resetCodeButton"
+        class="secondary-button"
+        type="button">
+        Reset
+      </button>
+
+      <button
+        id="clearCodeButton"
+        class="secondary-button"
+        type="button">
+        Clear
+      </button>
+
+    </div>
+
+    <!-- Preview Header -->
+    <div class="preview-heading">
+      <h3>Live Preview</h3>
+
+      <div class="preview-device-options">
+
+        <button
+          class="device-button active"
+          data-preview-size="desktop"
+          type="button">
+          Desktop
+        </button>
+
+        <button
+          class="device-button"
+          data-preview-size="mobile"
+          type="button">
+          Mobile
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Preview Frame -->
+    <div class="preview-container">
+      <iframe
+        id="livePreview"
+        class="preview-frame"
+        title="CRAFTLY Website Preview"
+        sandbox="allow-scripts">
+      </iframe>
+    </div>
+
+    <!-- Editor Status -->
+    <p
+      id="editorStatus"
+      class="status-message"
+      role="status"
+      aria-live="polite">
+      Ready to edit.
+    </p>
+
+  </div>
+
+</section>
+<!-- End Code Editor -->
         <!-- API Manager -->
         <section class="page-section" id="api">
 
