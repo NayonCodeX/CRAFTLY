@@ -616,6 +616,108 @@ ${safeJavaScript}
     });
   });
 
+   // ========================================
+  // MY PROJECTS — SAVE & OPEN
+  // ========================================
+
+  const saveProjectButton = $("#saveProjectButton");
+  const projectList = $("#projectList");
+  const projectCount = $("#projectCount");
+  const emptyProjects = $("#emptyProjects");
+
+  const PROJECT_STORAGE_KEY = "craftly-projects";
+
+  function getProjects() {
+    try {
+      return JSON.parse(
+        localStorage.getItem(PROJECT_STORAGE_KEY) || "[]"
+      );
+    } catch {
+      return [];
+    }
+  }
+
+  function renderProjects() {
+    if (!projectList) return;
+
+    const projects = getProjects();
+    projectList.replaceChildren();
+
+    if (projectCount) {
+      projectCount.textContent =
+        `${projects.length} Projects`;
+    }
+
+    if (emptyProjects) {
+      emptyProjects.hidden = projects.length > 0;
+    }
+
+    projects.forEach(project => {
+      const card = document.createElement("div");
+      const name = document.createElement("strong");
+      const openButton = document.createElement("button");
+
+      card.className = "project-card";
+      name.textContent = project.name;
+
+      openButton.type = "button";
+      openButton.className = "secondary-button";
+      openButton.textContent = "Open";
+
+      openButton.addEventListener("click", () => {
+        htmlCode.value = project.html;
+        cssCode.value = project.css;
+        jsCode.value = project.js;
+
+        navigateTo("editor");
+        switchCodeTab("html");
+        runCodePreview();
+
+        setEditorStatus(`${project.name} opened.`);
+      });
+
+      card.append(name, openButton);
+      projectList.appendChild(card);
+    });
+  }
+
+  saveProjectButton?.addEventListener("click", () => {
+    if (!htmlCode || !cssCode || !jsCode) return;
+
+    const name = prompt("Enter your project name:");
+
+    if (!name || !name.trim()) {
+      setEditorStatus("Project name is required.");
+      return;
+    }
+
+    const projects = getProjects();
+
+    projects.unshift({
+      id: Date.now(),
+      name: name.trim().slice(0, 60),
+      html: htmlCode.value,
+      css: cssCode.value,
+      js: jsCode.value,
+      updatedAt: new Date().toISOString()
+    });
+
+    try {
+      localStorage.setItem(
+        PROJECT_STORAGE_KEY,
+        JSON.stringify(projects)
+      );
+
+      renderProjects();
+      setEditorStatus("Project saved successfully.");
+    } catch {
+      setEditorStatus(
+        "Could not save project. Phone storage may be full."
+      );
+    }
+  });
+
+  renderProjects();
   // Initial editor state
   if (htmlCode && cssCode && jsCode) {
     switchCodeTab("html");
