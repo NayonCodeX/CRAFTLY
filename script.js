@@ -1,12 +1,16 @@
-/* =====================================
+/* ==========================================
    CRAFTLY — Main JavaScript
    Build by Nayon Ahamed | NCX
-   ===================================== */
+   ========================================== */
+
+"use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
-  "use strict";
 
-  // ---------- Helpers ----------
+  // ========================================
+  // 1. HELPERS
+  // ========================================
+
   const $ = (selector, parent = document) =>
     parent.querySelector(selector);
 
@@ -32,48 +36,55 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // ---------- Theme ----------
+  // ========================================
+  // 2. THEME SYSTEM
+  // ========================================
+
   const themeButton = $("#themeButton");
   const themeOptions = $$(".theme-option");
   const colorDots = $$(".color-dot");
   const customColor = $("#customColor");
   const resetColorButton = $("#resetColorButton");
 
-  const defaultColor = "#2C8C83";
+  const DEFAULT_COLOR = "#2C8C83";
 
   function applyTheme(theme, save = true) {
-    const selectedTheme = theme === "light" ? "light" : "dark";
+    const selected = theme === "light" ? "light" : "dark";
 
     document.body.classList.toggle(
       "light-theme",
-      selectedTheme === "light"
+      selected === "light"
     );
 
     themeOptions.forEach(button => {
-      button.classList.toggle(
-        "active",
-        button.dataset.theme === selectedTheme
-      );
+      const active = button.dataset.theme === selected;
+
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
     });
 
     if (save) {
-      storage.set("craftly-theme", selectedTheme);
+      storage.set("craftly-theme", selected);
     }
   }
 
   function applyAccent(color, save = true) {
-    if (!/^#[0-9A-Fa-f]{6}$/.test(color)) return;
+    if (!/^#[0-9a-fA-F]{6}$/.test(color)) return;
 
     document.documentElement.style.setProperty("--accent", color);
 
+    const normalized = color.toLowerCase();
+
     colorDots.forEach(dot => {
-      dot.classList.toggle(
-        "active",
-        dot.dataset.color?.toLowerCase() === color.toLowerCase()
-      );
+      const active =
+        dot.dataset.color?.toLowerCase() === normalized;
+
+      dot.classList.toggle("selected", active);
+      dot.classList.toggle("active", active);
+      dot.setAttribute("aria-pressed", String(active));
     });
 
-    if (customColor) {
+    if (customColor && customColor.value !== color) {
       customColor.value = color;
     }
 
@@ -83,7 +94,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   applyTheme(storage.get("craftly-theme", "dark"), false);
-  applyAccent(storage.get("craftly-accent", defaultColor), false);
+
+  applyAccent(
+    storage.get("craftly-accent", DEFAULT_COLOR),
+    false
+  );
 
   themeOptions.forEach(button => {
     button.addEventListener("click", () => {
@@ -91,12 +106,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  if (themeButton) {
-    themeButton.addEventListener("click", () => {
-      const isLight = document.body.classList.contains("light-theme");
-      applyTheme(isLight ? "dark" : "light");
-    });
-  }
+  themeButton?.addEventListener("click", () => {
+    const current = document.body.classList.contains("light-theme");
+
+    applyTheme(current ? "dark" : "light");
+  });
 
   colorDots.forEach(dot => {
     dot.addEventListener("click", () => {
@@ -104,121 +118,155 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  if (customColor) {
-    customColor.addEventListener("input", () => {
-      applyAccent(customColor.value);
-    });
-  }
+  customColor?.addEventListener("input", () => {
+    applyAccent(customColor.value);
+  });
 
-  if (resetColorButton) {
-    resetColorButton.addEventListener("click", () => {
-      applyAccent(defaultColor);
-    });
-  }
+  resetColorButton?.addEventListener("click", () => {
+    applyAccent(DEFAULT_COLOR);
+  });
 
-  // ---------- Navigation ----------
+  // ========================================
+  // 3. NAVIGATION SYSTEM
+  // ========================================
+
   const sidebar = $("#sidebar");
-  const sidebarOverlay = $("#sidebarOverlay");
+  const overlay = $("#sidebarOverlay");
   const menuButton = $("#menuButton");
-  const breadcrumbTitle = $("#breadcrumbTitle");
+  const breadcrumb = $("#breadcrumbTitle");
+
+  const dashboard = $("#dashboard");
 
   const pageTitles = {
     dashboard: "Dashboard",
     builder: "AI Website Builder",
-    projects: "My Projects",
     templates: "Template Library",
     editor: "Code Editor",
-    api: "API Manager",
+    projects: "My Projects",
     settings: "Settings",
+    api: "API Manager",
     about: "About CRAFTLY"
   };
 
   function closeSidebar() {
     sidebar?.classList.remove("open");
-    sidebarOverlay?.classList.remove("visible");
+    overlay?.classList.remove("visible");
+    menuButton?.setAttribute("aria-expanded", "false");
   }
 
-  function navigateTo(sectionId) {
-    const target = document.getElementById(sectionId);
-    const dashboard = $("#dashboard");
+  function openSidebar() {
+    sidebar?.classList.add("open");
+    overlay?.classList.add("visible");
+    menuButton?.setAttribute("aria-expanded", "true");
+  }
 
-    if (!target) return;
+  function navigateTo(id) {
+    const target = document.getElementById(id);
 
-    // Hide all main sections first.
-    $$(".page-section").forEach(section => {
+    if (!target || !pageTitles[id]) return;
+
+    // Hide all top-level pages.
+    $$(".page-content > .page-section").forEach(section => {
       section.style.display = "none";
     });
 
-    // Show the correct page.
-    if (sectionId === "dashboard") {
-      if (dashboard) dashboard.style.display = "block";
-    } else if (
-      sectionId === "builder" ||
-      sectionId === "projects"
-    ) {
-      if (dashboard) dashboard.style.display = "block";
-      target.style.display = "block";
+    // Dashboard contains Builder and Projects.
+    if (id === "dashboard") {
+      dashboard.style.display = "block";
+
+      $("#builder")?.scrollIntoView({
+        block: "start",
+        behavior: "auto"
+      });
+
+      window.scrollTo({ top: 0, behavior: "auto" });
+
+    } else if (id === "builder" || id === "projects") {
+
+      dashboard.style.display = "block";
+
+      target.scrollIntoView({
+        block: "start",
+        behavior: "auto"
+      });
+
     } else {
       target.style.display = "block";
+
+      window.scrollTo({
+        top: 0,
+        behavior: "auto"
+      });
     }
 
-    if (breadcrumbTitle) {
-      breadcrumbTitle.textContent =
-        pageTitles[sectionId] || "CRAFTLY";
+    if (breadcrumb) {
+      breadcrumb.textContent = pageTitles[id];
     }
 
     $$(".nav-link").forEach(link => {
-      const linkId = (link.dataset.section || "")
-        .replace("#", "");
+      const active = link.dataset.section === id;
 
-      link.classList.toggle("active", linkId === sectionId);
+      link.classList.toggle("active", active);
+      link.setAttribute("aria-current", active ? "page" : "false");
     });
 
     closeSidebar();
 
-    if (sectionId !== "dashboard") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
     if (history.replaceState) {
-      history.replaceState(null, "", `#${sectionId}`);
+      history.replaceState(null, "", `#${id}`);
     }
   }
 
+  // Navigation links.
   $$("[data-section]").forEach(link => {
     link.addEventListener("click", event => {
       event.preventDefault();
 
-      const sectionId = (link.dataset.section || "")
-        .replace("#", "");
-
-      navigateTo(sectionId);
+      navigateTo(link.dataset.section);
     });
   });
 
-  if (menuButton) {
-    menuButton.addEventListener("click", () => {
-      sidebar?.classList.toggle("open");
-      sidebarOverlay?.classList.toggle("visible");
+  // Other internal links.
+  $$('a[href^="#"]:not([data-section])').forEach(link => {
+    link.addEventListener("click", event => {
+      const id = link.getAttribute("href").slice(1);
+
+      if (!pageTitles[id]) return;
+
+      event.preventDefault();
+      navigateTo(id);
     });
-  }
+  });
 
-  if (sidebarOverlay) {
-    sidebarOverlay.addEventListener("click", closeSidebar);
-  }
+  menuButton?.addEventListener("click", () => {
+    const isOpen = sidebar?.classList.contains("open");
 
-  // Initial page
-  const initialPage = location.hash.replace("#", "");
+    if (isOpen) {
+      closeSidebar();
+    } else {
+      openSidebar();
+    }
+  });
+
+  overlay?.addEventListener("click", closeSidebar);
+
+  // Initial page.
+  const initialPage = location.hash.slice(1);
+
   navigateTo(
-    pageTitles[initialPage] ? initialPage : "dashboard"
+    Object.hasOwn(pageTitles, initialPage)
+      ? initialPage
+      : "dashboard"
   );
 
-  // ---------- Login Dialog ----------
+  // ========================================
+  // 4. LOGIN DIALOG
+  // ========================================
+
   const loginDialog = $("#loginDialog");
   const loginButton = $("#loginButton");
-  const closeDialog = $("#closeDialog");
+
+  const closeDialogButton = $("#closeDialog");
   const googleLogin = $("#googleLogin");
   const emailLogin = $("#emailLogin");
   const guestLogin = $("#guestLogin");
@@ -227,10 +275,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!loginDialog) return;
 
     if (typeof loginDialog.showModal === "function") {
-      if (!loginDialog.open) loginDialog.showModal();
+      if (!loginDialog.open) {
+        loginDialog.showModal();
+      }
     } else {
       loginDialog.hidden = false;
-      loginDialog.classList.add("visible");
     }
   }
 
@@ -242,24 +291,27 @@ document.addEventListener("DOMContentLoaded", () => {
       loginDialog.close();
     } else {
       loginDialog.hidden = true;
-      loginDialog.classList.remove("visible");
     }
   }
 
   loginButton?.addEventListener("click", openLoginDialog);
-  closeDialog?.addEventListener("click", closeLoginDialog);
+
+  closeDialogButton?.addEventListener(
+    "click",
+    closeLoginDialog
+  );
 
   googleLogin?.addEventListener("click", () => {
     alert(
       "Google login is not configured yet. " +
-      "A secure authentication backend is required."
+      "Secure authentication setup is required."
     );
   });
 
   emailLogin?.addEventListener("click", () => {
     alert(
       "Email login is not configured yet. " +
-      "A secure authentication backend is required."
+      "Secure authentication setup is required."
     );
   });
 
@@ -272,75 +324,81 @@ document.addEventListener("DOMContentLoaded", () => {
 
     closeLoginDialog();
 
-    alert(
-      "Guest Mode activated. You can explore the available " +
-      "workspace features on this device."
-    );
+    alert("Guest Mode activated successfully.");
   });
 
-  if (storage.get("craftly-guest-mode") === "true" && loginButton) {
+  if (
+    storage.get("craftly-guest-mode") === "true" &&
+    loginButton
+  ) {
     loginButton.textContent = "Guest Mode";
   }
 
-  // ---------- Template Selection ----------
-  const templateButtons = $$(".template-button");
+  // ========================================
+  // 5. TEMPLATE SELECTION
+  // ========================================
+
   const websitePrompt = $("#websitePrompt");
   const builderStatus = $("#builderStatus");
 
   const templatePrompts = {
     "Business":
-      "Create a professional business website with a homepage, " +
-      "about section, services, contact information and a clean layout.",
+      "Create a professional business website with homepage, " +
+      "about, services and contact sections.",
 
     "Portfolio":
-      "Create a modern personal portfolio website with an introduction, " +
-      "skills, projects, experience and contact section.",
+      "Create a modern personal portfolio with introduction, " +
+      "skills, projects and contact information.",
 
     "Online Store":
-      "Create a modern online store layout with product cards, " +
-      "categories, shopping information and contact details.",
+      "Create a modern online store with product cards, " +
+      "categories and shopping information.",
 
     "Blog":
       "Create a clean blog website with featured articles, " +
-      "categories, recent posts and an about section."
+      "categories and recent posts."
   };
 
-  templateButtons.forEach(button => {
+  $$(".template-button").forEach(button => {
     button.addEventListener("click", () => {
-      const templateCard = button.closest("[data-template]");
-      const templateName =
-        templateCard?.dataset.template ||
+
+      const card = button.closest("[data-template]");
+
+      const name =
+        card?.dataset.template ||
         button.dataset.template;
 
-      const prompt = templatePrompts[templateName];
+      const prompt = templatePrompts[name];
 
-      if (!prompt) return;
+      if (!prompt || !websitePrompt) return;
 
-      if (websitePrompt) {
-        websitePrompt.value = prompt;
-      }
+      websitePrompt.value = prompt;
 
       if (builderStatus) {
         builderStatus.textContent =
-          `${templateName} template selected. ` +
-          "Customize the prompt in AI Builder.";
+          `${name} template selected. Customize your prompt.`;
       }
 
       navigateTo("builder");
-      websitePrompt?.focus();
+
+      websitePrompt.focus();
     });
   });
 
-  // ---------- AI Builder ----------
+  // ========================================
+  // 6. AI BUILDER VALIDATION
+  // ========================================
+
   const generateButton = $("#generateButton");
 
   generateButton?.addEventListener("click", () => {
+
     const prompt = websitePrompt?.value.trim() || "";
 
     if (!prompt) {
       if (builderStatus) {
         builderStatus.textContent =
-          "Please describe the website you want to create.";
+          "Please describe your website idea first.";
       }
 
       websitePrompt?.focus();
@@ -348,30 +406,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (prompt.length > 5000) {
-      if (builderStatus) {
-        builderStatus.textContent =
-          "Your prompt is too long. Please keep it under 5000 characters.";
-      }
+      builderStatus.textContent =
+        "Prompt is too long. Maximum length is 5000 characters.";
+
       return;
     }
 
     if (builderStatus) {
       builderStatus.textContent =
-        "AI generation is not connected yet. " +
-        "Configure a secure backend and AI API before generating websites.";
+        "AI service is not connected yet. " +
+        "A secure backend and API configuration are required.";
     }
 
-    // No fake generation or fake API response.
   });
 
-  // ---------- Keyboard Support ----------
+  // ========================================
+  // 7. KEYBOARD ACCESSIBILITY
+  // ========================================
+
   document.addEventListener("keydown", event => {
     if (event.key === "Escape") {
       closeSidebar();
-      closeLoginDialog();
     }
   });
 
-  // ---------- App Ready ----------
-  console.info("CRAFTLY interface initialized.");
+  // ========================================
+  // 8. INITIALIZATION
+  // ========================================
+
+  console.info("CRAFTLY initialized successfully.");
+
 });
